@@ -17,9 +17,7 @@ public class OrderShipmentUseCaseTest {
 
     @Test
     public void shipApprovedOrder() throws Exception {
-        Order initialOrder = new Order();
-        initialOrder.setId(1);
-        initialOrder.setStatus(OrderStatus.APPROVED);
+        Order initialOrder = approved();
         orderRepository.addOrder(initialOrder);
 
         OrderShipmentRequest request = new OrderShipmentRequest();
@@ -31,11 +29,14 @@ public class OrderShipmentUseCaseTest {
         assertThat(shipmentService.getShippedOrder()).isEqualTo(initialOrder);
     }
 
+    private static Order approved() {
+        Order initialOrder = new Order(1, OrderStatus.APPROVED);
+        return initialOrder;
+    }
+
     @Test
     public void createdOrdersCannotBeShipped() throws Exception {
-        Order initialOrder = new Order();
-        initialOrder.setId(1);
-        initialOrder.setStatus(OrderStatus.CREATED);
+        Order initialOrder = getOrder();
         orderRepository.addOrder(initialOrder);
 
         OrderShipmentRequest request = new OrderShipmentRequest();
@@ -45,13 +46,15 @@ public class OrderShipmentUseCaseTest {
 
         assertThat(orderRepository.getSavedOrder()).isNull();
         assertThat(shipmentService.getShippedOrder()).isNull();
+    }
+
+    private static Order getOrder() {
+        return new Order(1, OrderStatus.CREATED);
     }
 
     @Test
     public void rejectedOrdersCannotBeShipped() throws Exception {
-        Order initialOrder = new Order();
-        initialOrder.setId(1);
-        initialOrder.setStatus(OrderStatus.REJECTED);
+        Order initialOrder = getInitialOrder();
         orderRepository.addOrder(initialOrder);
 
         OrderShipmentRequest request = new OrderShipmentRequest();
@@ -62,11 +65,14 @@ public class OrderShipmentUseCaseTest {
         assertThat(shipmentService.getShippedOrder()).isNull();
     }
 
+    private static Order getInitialOrder() {
+        Order initialOrder = new Order(1, OrderStatus.REJECTED);
+        return initialOrder;
+    }
+
     @Test
     public void shippedOrdersCannotBeShippedAgain() throws Exception {
-        Order initialOrder = new Order();
-        initialOrder.setId(1);
-        initialOrder.setStatus(OrderStatus.SHIPPED);
+        Order initialOrder = new Order(1, OrderStatus.SHIPPED);
         orderRepository.addOrder(initialOrder);
 
         OrderShipmentRequest request = new OrderShipmentRequest();
@@ -77,4 +83,5 @@ public class OrderShipmentUseCaseTest {
         assertThat(orderRepository.getSavedOrder()).isNull();
         assertThat(shipmentService.getShippedOrder()).isNull();
     }
+
 }

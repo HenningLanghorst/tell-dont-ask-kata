@@ -12,17 +12,22 @@ import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.*;
 public class Order {
     private BigDecimal total;
     private final String currency;
-    private final List<OrderItem> items;
+    private final List<OrderItem> items = new ArrayList<>();
     private BigDecimal tax;
     private OrderStatus status;
     private int id;
 
     public Order() {
         status = OrderStatus.CREATED;
-        items = new ArrayList<>();
         currency = "EUR";
         total = new BigDecimal("0.00");
         tax = new BigDecimal("0.00");
+    }
+
+    public Order(int id, OrderStatus status) {
+        this.id = id;
+        this.status = status;
+        currency = "EUR";
     }
 
     public static Order empty() {
@@ -50,16 +55,8 @@ public class Order {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void approve() {
