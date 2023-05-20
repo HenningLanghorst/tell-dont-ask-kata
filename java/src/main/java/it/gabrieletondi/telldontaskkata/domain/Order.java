@@ -11,52 +11,39 @@ import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.*;
 
 public class Order {
     private BigDecimal total;
-    private String currency;
-    private List<OrderItem> items;
+    private final String currency;
+    private final List<OrderItem> items;
     private BigDecimal tax;
     private OrderStatus status;
     private int id;
 
+    public Order() {
+        status = OrderStatus.CREATED;
+        items = new ArrayList<>();
+        currency = "EUR";
+        total = new BigDecimal("0.00");
+        tax = new BigDecimal("0.00");
+    }
+
     public static Order empty() {
-        Order order = new Order();
-        order.setStatus(OrderStatus.CREATED);
-        order.setItems(new ArrayList<>());
-        order.setCurrency("EUR");
-        order.setTotal(new BigDecimal("0.00"));
-        order.setTax(new BigDecimal("0.00"));
-        return order;
+        return new Order();
     }
 
     public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
     public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
 
     public List<OrderItem> getItems() {
         return items;
     }
 
-    public void setItems(List<OrderItem> items) {
-        this.items = items;
-    }
-
     public BigDecimal getTax() {
         return tax;
-    }
-
-    public void setTax(BigDecimal tax) {
-        this.tax = tax;
     }
 
     public OrderStatus getStatus() {
@@ -76,35 +63,35 @@ public class Order {
     }
 
     public void approve() {
-        if (getStatus().equals(OrderStatus.SHIPPED)) {
+        if (status == OrderStatus.SHIPPED) {
             throw new ShippedOrdersCannotBeChangedException();
         }
 
-        if (getStatus().equals(OrderStatus.REJECTED)) {
+        if (status == OrderStatus.REJECTED) {
             throw new RejectedOrderCannotBeApprovedException();
         }
 
-        setStatus(OrderStatus.APPROVED);
+        status = OrderStatus.APPROVED;
     }
 
     public void reject() {
-        if (getStatus().equals(OrderStatus.SHIPPED)) {
+        if (status == OrderStatus.SHIPPED) {
             throw new ShippedOrdersCannotBeChangedException();
         }
 
-        if (getStatus().equals(OrderStatus.APPROVED)) {
+        if (status == OrderStatus.APPROVED) {
             throw new ApprovedOrderCannotBeRejectedException();
         }
 
-        setStatus(OrderStatus.REJECTED);
+        this.status = OrderStatus.REJECTED;
     }
 
     public void addItem(Product product, int quantity) {
         final OrderItem orderItem = OrderItem.from(product, quantity);
-        getItems().add(orderItem);
+        items.add(orderItem);
 
-        setTotal(getTotal().add(orderItem.getTaxedAmount()));
-        setTax(getTax().add(orderItem.getTax()));
+        this.total = total.add(orderItem.getTaxedAmount());
+        this.tax = tax.add(orderItem.getTax());
     }
 
     public void verifyIsShippable() {
@@ -118,6 +105,6 @@ public class Order {
     }
 
     public void markAsShipped() {
-        setStatus(SHIPPED);
+        status = SHIPPED;
     }
 }
