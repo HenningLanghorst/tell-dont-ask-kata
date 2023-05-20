@@ -12,7 +12,7 @@ public class OrderItem {
     private BigDecimal tax;
 
     public static OrderItem from(Product product, int quantity) {
-        final BigDecimal unitaryTax = product.getPrice().divide(valueOf(100)).multiply(product.getCategory().getTaxPercentage()).setScale(2, HALF_UP);
+        final BigDecimal unitaryTax = product.getPrice().divide(valueOf(100)).multiply(product.getCategory().taxPercentage()).setScale(2, HALF_UP);
         final BigDecimal unitaryTaxedAmount = product.getPrice().add(unitaryTax).setScale(2, HALF_UP);
         final BigDecimal taxedAmount = unitaryTaxedAmount.multiply(BigDecimal.valueOf(quantity)).setScale(2, HALF_UP);
         final BigDecimal taxAmount = unitaryTax.multiply(BigDecimal.valueOf(quantity));
