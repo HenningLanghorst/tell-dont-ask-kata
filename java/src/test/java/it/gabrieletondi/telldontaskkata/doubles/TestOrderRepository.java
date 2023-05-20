@@ -8,7 +8,7 @@ import java.util.List;
 
 public class TestOrderRepository implements OrderRepository {
     private Order insertedOrder;
-    private List<Order> orders = new ArrayList<>();
+    private final List<Order> orders = new ArrayList<>();
 
     public Order getSavedOrder() {
         return insertedOrder;
