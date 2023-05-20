@@ -8,12 +8,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 
-public class OrderApprovalUseCaseTest {
+class OrderApprovalUseCaseTest {
     private final TestOrderRepository orderRepository = new TestOrderRepository();
     private final OrderApprovalUseCase useCase = new OrderApprovalUseCase(orderRepository);
 
     @Test
-    public void approvedExistingOrder() throws Exception {
+    void approvedExistingOrder() {
 
         Order initialOrder = new Order(1, OrderStatus.CREATED);
         orderRepository.addOrder(initialOrder);
@@ -29,7 +29,7 @@ public class OrderApprovalUseCaseTest {
     }
 
     @Test
-    public void rejectedExistingOrder() throws Exception {
+    void rejectedExistingOrder() {
 
         Order initialOrder = new Order(1, OrderStatus.CREATED);
         orderRepository.addOrder(initialOrder);
@@ -45,7 +45,7 @@ public class OrderApprovalUseCaseTest {
     }
 
     @Test
-    public void cannotApproveRejectedOrder() throws Exception {
+    void cannotApproveRejectedOrder() {
 
         Order initialOrder = new Order(1, OrderStatus.REJECTED);
         orderRepository.addOrder(initialOrder);
@@ -59,7 +59,7 @@ public class OrderApprovalUseCaseTest {
     }
 
     @Test
-    public void cannotRejectApprovedOrder() throws Exception {
+    void cannotRejectApprovedOrder() {
 
         Order initialOrder = new Order(1, OrderStatus.APPROVED);
         orderRepository.addOrder(initialOrder);
@@ -73,7 +73,7 @@ public class OrderApprovalUseCaseTest {
     }
 
     @Test
-    public void shippedOrdersCannotBeApproved() throws Exception {
+    void shippedOrdersCannotBeApproved() {
 
         Order initialOrder = new Order(1, OrderStatus.SHIPPED);
         orderRepository.addOrder(initialOrder);
@@ -87,7 +87,7 @@ public class OrderApprovalUseCaseTest {
     }
 
     @Test
-    public void shippedOrdersCannotBeRejected() throws Exception {
+    void shippedOrdersCannotBeRejected() {
 
         Order initialOrder = new Order(1, OrderStatus.SHIPPED);
         orderRepository.addOrder(initialOrder);
