@@ -93,4 +93,12 @@ public class Order {
 
         setStatus(OrderStatus.REJECTED);
     }
+
+    public void addItem(Product product, int quantity) {
+        final OrderItem orderItem = OrderItem.from(product, quantity);
+        getItems().add(orderItem);
+
+        setTotal(getTotal().add(orderItem.getTaxedAmount()));
+        setTax(getTax().add(orderItem.getTax()));
+    }
 }
