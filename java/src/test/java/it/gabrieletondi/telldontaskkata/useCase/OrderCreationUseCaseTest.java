@@ -22,18 +22,11 @@ class OrderCreationUseCaseTest {
     private final Category food = new Category("food", new BigDecimal("10"));
     private final ProductCatalog productCatalog = new InMemoryProductCatalog(
             Arrays.asList(
-                    new Product() {{
-                        setName("salad");
-                        setPrice(new BigDecimal("3.56"));
-                        setCategory(food);
-                    }},
-                    new Product() {{
-                        setName("tomato");
-                        setPrice(new BigDecimal("4.65"));
-                        setCategory(food);
-                    }}
+                    new Product("salad", new BigDecimal("3.56"), food),
+                    new Product("tomato", new BigDecimal("4.65"), food)
             )
     );
+
     private final OrderCreationUseCase useCase = new OrderCreationUseCase(orderRepository, productCatalog);
 
     @Test
@@ -59,13 +52,13 @@ class OrderCreationUseCaseTest {
         assertThat(insertedOrder.getTax()).isEqualTo(new BigDecimal("2.13"));
         assertThat(insertedOrder.getCurrency()).isEqualTo("EUR");
         assertThat(insertedOrder.getItems()).hasSize(2);
-        assertThat(insertedOrder.getItems().get(0).product().getName()).isEqualTo("salad");
-        assertThat(insertedOrder.getItems().get(0).product().getPrice()).isEqualTo(new BigDecimal("3.56"));
+        assertThat(insertedOrder.getItems().get(0).product().name()).isEqualTo("salad");
+        assertThat(insertedOrder.getItems().get(0).product().price()).isEqualTo(new BigDecimal("3.56"));
         assertThat(insertedOrder.getItems().get(0).quantity()).isEqualTo(2);
         assertThat(insertedOrder.getItems().get(0).taxedAmount()).isEqualTo(new BigDecimal("7.84"));
         assertThat(insertedOrder.getItems().get(0).tax()).isEqualTo(new BigDecimal("0.72"));
-        assertThat(insertedOrder.getItems().get(1).product().getName()).isEqualTo("tomato");
-        assertThat(insertedOrder.getItems().get(1).product().getPrice()).isEqualTo(new BigDecimal("4.65"));
+        assertThat(insertedOrder.getItems().get(1).product().name()).isEqualTo("tomato");
+        assertThat(insertedOrder.getItems().get(1).product().price()).isEqualTo(new BigDecimal("4.65"));
         assertThat(insertedOrder.getItems().get(1).quantity()).isEqualTo(3);
         assertThat(insertedOrder.getItems().get(1).taxedAmount()).isEqualTo(new BigDecimal("15.36"));
         assertThat(insertedOrder.getItems().get(1).tax()).isEqualTo(new BigDecimal("1.41"));
