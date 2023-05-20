@@ -10,14 +10,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 
-public class OrderShipmentUseCaseTest {
+class OrderShipmentUseCaseTest {
     private final TestOrderRepository orderRepository = new TestOrderRepository();
     private final TestShipmentService shipmentService = new TestShipmentService();
     private final OrderShipmentUseCase useCase = new OrderShipmentUseCase(orderRepository, shipmentService);
 
     @Test
-    public void shipApprovedOrder() throws Exception {
-        Order initialOrder = approved();
+    void shipApprovedOrder() {
+        Order initialOrder = new Order(1, OrderStatus.APPROVED);
         orderRepository.addOrder(initialOrder);
 
         OrderShipmentRequest request = new OrderShipmentRequest();
@@ -29,13 +29,8 @@ public class OrderShipmentUseCaseTest {
         assertThat(shipmentService.getShippedOrder()).isEqualTo(initialOrder);
     }
 
-    private static Order approved() {
-        Order initialOrder = new Order(1, OrderStatus.APPROVED);
-        return initialOrder;
-    }
-
     @Test
-    public void createdOrdersCannotBeShipped() throws Exception {
+    void createdOrdersCannotBeShipped() {
         Order initialOrder = getOrder();
         orderRepository.addOrder(initialOrder);
 
@@ -53,8 +48,8 @@ public class OrderShipmentUseCaseTest {
     }
 
     @Test
-    public void rejectedOrdersCannotBeShipped() throws Exception {
-        Order initialOrder = getInitialOrder();
+    void rejectedOrdersCannotBeShipped() {
+        Order initialOrder = new Order(1, OrderStatus.REJECTED);
         orderRepository.addOrder(initialOrder);
 
         OrderShipmentRequest request = new OrderShipmentRequest();
@@ -65,13 +60,8 @@ public class OrderShipmentUseCaseTest {
         assertThat(shipmentService.getShippedOrder()).isNull();
     }
 
-    private static Order getInitialOrder() {
-        Order initialOrder = new Order(1, OrderStatus.REJECTED);
-        return initialOrder;
-    }
-
     @Test
-    public void shippedOrdersCannotBeShippedAgain() throws Exception {
+    void shippedOrdersCannotBeShippedAgain() {
         Order initialOrder = new Order(1, OrderStatus.SHIPPED);
         orderRepository.addOrder(initialOrder);
 
