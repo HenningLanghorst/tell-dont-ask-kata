@@ -19,10 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class OrderCreationUseCaseTest {
     private final TestOrderRepository orderRepository = new TestOrderRepository();
-    private Category food = new Category() {{
-        setName("food");
-        setTaxPercentage(new BigDecimal("10"));
-    }};;
+    private Category food = new Category("food", new BigDecimal("10"));
     private final ProductCatalog productCatalog = new InMemoryProductCatalog(
             Arrays.<Product>asList(
                     new Product() {{
