@@ -1,8 +1,5 @@
 package it.gabrieletondi.telldontaskkata.domain;
 
-import it.gabrieletondi.telldontaskkata.useCase.OrderCannotBeShippedException;
-import it.gabrieletondi.telldontaskkata.useCase.OrderCannotBeShippedTwiceException;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
