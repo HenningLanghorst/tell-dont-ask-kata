@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.*;
+import static java.math.BigDecimal.valueOf;
+import static java.math.RoundingMode.HALF_UP;
 
 public class Order {
     private BigDecimal total;
@@ -84,11 +86,15 @@ public class Order {
     }
 
     public void addItem(Product product, int quantity) {
-        final OrderItem orderItem = OrderItem.from(product, quantity);
+        final BigDecimal unitaryTax = product.price().divide(valueOf(100)).multiply(product.category().taxPercentage()).setScale(2, HALF_UP);
+        final BigDecimal unitaryTaxedAmount = product.price().add(unitaryTax).setScale(2, HALF_UP);
+        final BigDecimal taxedAmount = unitaryTaxedAmount.multiply(BigDecimal.valueOf(quantity)).setScale(2, HALF_UP);
+        final BigDecimal taxAmount = unitaryTax.multiply(BigDecimal.valueOf(quantity));
+        final OrderItem orderItem = new OrderItem(product, quantity, taxedAmount, taxAmount);
         items.add(orderItem);
 
-        this.total = total.add(orderItem.taxedAmount());
-        this.tax = tax.add(orderItem.tax());
+        this.total = total.add(taxedAmount);
+        this.tax = tax.add(taxAmount);
     }
 
     public void verifyIsShippable() {
