@@ -87,8 +87,8 @@ public class Order {
         final OrderItem orderItem = OrderItem.from(product, quantity);
         items.add(orderItem);
 
-        this.total = total.add(orderItem.getTaxedAmount());
-        this.tax = tax.add(orderItem.getTax());
+        this.total = total.add(orderItem.taxedAmount());
+        this.tax = tax.add(orderItem.tax());
     }
 
     public void verifyIsShippable() {

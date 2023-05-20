@@ -17,11 +17,11 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class OrderCreationUseCaseTest {
+class OrderCreationUseCaseTest {
     private final TestOrderRepository orderRepository = new TestOrderRepository();
-    private Category food = new Category("food", new BigDecimal("10"));
+    private final Category food = new Category("food", new BigDecimal("10"));
     private final ProductCatalog productCatalog = new InMemoryProductCatalog(
-            Arrays.<Product>asList(
+            Arrays.asList(
                     new Product() {{
                         setName("salad");
                         setPrice(new BigDecimal("3.56"));
@@ -37,7 +37,7 @@ public class OrderCreationUseCaseTest {
     private final OrderCreationUseCase useCase = new OrderCreationUseCase(orderRepository, productCatalog);
 
     @Test
-    public void sellMultipleItems() throws Exception {
+    void sellMultipleItems() {
         SellItemRequest saladRequest = new SellItemRequest();
         saladRequest.setProductName("salad");
         saladRequest.setQuantity(2);
@@ -59,20 +59,20 @@ public class OrderCreationUseCaseTest {
         assertThat(insertedOrder.getTax()).isEqualTo(new BigDecimal("2.13"));
         assertThat(insertedOrder.getCurrency()).isEqualTo("EUR");
         assertThat(insertedOrder.getItems()).hasSize(2);
-        assertThat(insertedOrder.getItems().get(0).getProduct().getName()).isEqualTo("salad");
-        assertThat(insertedOrder.getItems().get(0).getProduct().getPrice()).isEqualTo(new BigDecimal("3.56"));
-        assertThat(insertedOrder.getItems().get(0).getQuantity()).isEqualTo(2);
-        assertThat(insertedOrder.getItems().get(0).getTaxedAmount()).isEqualTo(new BigDecimal("7.84"));
-        assertThat(insertedOrder.getItems().get(0).getTax()).isEqualTo(new BigDecimal("0.72"));
-        assertThat(insertedOrder.getItems().get(1).getProduct().getName()).isEqualTo("tomato");
-        assertThat(insertedOrder.getItems().get(1).getProduct().getPrice()).isEqualTo(new BigDecimal("4.65"));
-        assertThat(insertedOrder.getItems().get(1).getQuantity()).isEqualTo(3);
-        assertThat(insertedOrder.getItems().get(1).getTaxedAmount()).isEqualTo(new BigDecimal("15.36"));
-        assertThat(insertedOrder.getItems().get(1).getTax()).isEqualTo(new BigDecimal("1.41"));
+        assertThat(insertedOrder.getItems().get(0).product().getName()).isEqualTo("salad");
+        assertThat(insertedOrder.getItems().get(0).product().getPrice()).isEqualTo(new BigDecimal("3.56"));
+        assertThat(insertedOrder.getItems().get(0).quantity()).isEqualTo(2);
+        assertThat(insertedOrder.getItems().get(0).taxedAmount()).isEqualTo(new BigDecimal("7.84"));
+        assertThat(insertedOrder.getItems().get(0).tax()).isEqualTo(new BigDecimal("0.72"));
+        assertThat(insertedOrder.getItems().get(1).product().getName()).isEqualTo("tomato");
+        assertThat(insertedOrder.getItems().get(1).product().getPrice()).isEqualTo(new BigDecimal("4.65"));
+        assertThat(insertedOrder.getItems().get(1).quantity()).isEqualTo(3);
+        assertThat(insertedOrder.getItems().get(1).taxedAmount()).isEqualTo(new BigDecimal("15.36"));
+        assertThat(insertedOrder.getItems().get(1).tax()).isEqualTo(new BigDecimal("1.41"));
     }
 
     @Test
-    public void unknownProduct() throws Exception {
+    void unknownProduct() {
         SellItemsRequest request = new SellItemsRequest();
         request.setRequests(new ArrayList<>());
         SellItemRequest unknownProductRequest = new SellItemRequest();
